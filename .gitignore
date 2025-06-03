@@ -42,11 +42,12 @@ logs/
 .env.local
 
 # Sensitive configuration files
-**/terraform.tfvars
 **/terraform.tfvars.json
 **/*.auto.tfvars
 **/*.auto.tfvars.json
-*tfplan
+tfplan
+*.tfplan
+terraform.tfplan
 
 # Service account keys
 *.json
