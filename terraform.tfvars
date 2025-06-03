@@ -113,15 +113,15 @@ composer_environment_size = "ENVIRONMENT_SIZE_SMALL"
 
 # Composer workload resource allocation (small for demo)
 composer_scheduler_cpu     = 0.5
-composer_scheduler_memory  = 1.875
+composer_scheduler_memory  = 2.0     # Must be multiple of 0.25GB
 composer_scheduler_storage = 1
 
 composer_webserver_cpu     = 0.5
-composer_webserver_memory  = 1.875
+composer_webserver_memory  = 2.0     # Must be at least 2GB
 composer_webserver_storage = 1
 
 composer_worker_cpu        = 0.5
-composer_worker_memory     = 1.875
+composer_worker_memory     = 2.0     # Must be multiple of 0.25GB
 composer_worker_storage    = 1
 composer_worker_min_count  = 1
 composer_worker_max_count  = 3 
