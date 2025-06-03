@@ -1,0 +1,23 @@
+product_id,product_name,category,subcategory,brand,unit_price,cost_price,supplier_id,weight_kg,dimensions_cm,color,material,launch_date,discontinued
+PROD001,Wireless Bluetooth Headphones,Electronics,Audio,TechSound,29.99,18.50,SUP001,0.25,20x18x8,Black,Plastic,2023-01-15,N
+PROD002,Smart Fitness Tracker,Electronics,Wearables,FitTech,149.99,89.99,SUP002,0.05,4x2x1,Blue,Silicone,2023-02-01,N
+PROD003,Organic Cotton T-Shirt,Clothing,Shirts,EcoWear,19.99,8.99,SUP003,0.15,Standard,White,Cotton,2023-01-10,N
+PROD004,Professional Coffee Maker,Home & Kitchen,Appliances,BrewMaster,79.99,45.99,SUP004,2.8,35x25x30,Silver,Stainless Steel,2023-03-01,N
+PROD005,4K Wireless Security Camera,Electronics,Security,SafeGuard,199.99,119.99,SUP005,0.8,15x10x12,Black,Metal,2023-02-15,N
+PROD006,LED Desk Lamp,Home & Office,Lighting,BrightLite,9.99,4.99,SUP006,0.6,45x15x15,White,Plastic,2023-01-05,N
+PROD007,Gaming Mechanical Keyboard,Electronics,Gaming,GameTech,299.99,179.99,SUP007,1.2,45x15x4,RGB,Aluminum,2023-04-01,N
+PROD008,Yoga Mat Premium,Sports & Fitness,Exercise,FlexFit,49.99,24.99,SUP008,1.8,183x61x0.6,Purple,TPE,2023-01-20,N
+PROD009,Portable Power Bank,Electronics,Accessories,PowerPro,89.99,49.99,SUP009,0.4,15x7x2,Black,Plastic,2023-02-10,N
+PROD010,Stainless Steel Water Bottle,Home & Kitchen,Drinkware,HydroLife,39.99,19.99,SUP010,0.5,25x7x7,Silver,Stainless Steel,2023-01-01,N
+PROD011,Wireless Phone Charger,Electronics,Accessories,ChargeFast,24.99,12.99,SUP011,0.2,10x10x1,Black,Plastic,2023-02-05,N
+PROD012,Smart Home Speaker,Electronics,Smart Home,VoiceTech,119.99,69.99,SUP012,1.1,16x16x10,Charcoal,Fabric,2023-03-15,N
+PROD013,Running Shorts,Clothing,Activewear,SportFlex,34.99,16.99,SUP013,0.12,Standard,Navy,Polyester,2023-02-20,N
+PROD014,Noise-Canceling Earbuds,Electronics,Audio,SoundWave,159.99,94.99,SUP014,0.08,Case: 8x5x3,White,Plastic,2023-04-10,N
+PROD015,Scented Candle Set,Home & Decor,Fragrance,AromaBliss,14.99,6.99,SUP015,0.8,Set of 3,Multi,Soy Wax,2023-01-25,N
+PROD016,Laptop Stand Adjustable,Home & Office,Accessories,ErgoDesk,69.99,39.99,SUP016,1.5,30x25x5,Silver,Aluminum,2023-03-05,N
+PROD017,Electric Toothbrush,Health & Beauty,Oral Care,DentClean,249.99,149.99,SUP017,0.2,25x3x3,Blue,Plastic,2023-04-05,N
+PROD018,Resistance Bands Set,Sports & Fitness,Exercise,StrengthPro,44.99,22.99,SUP018,0.6,Set of 5,Multi,Latex,2023-02-25,N
+PROD019,Smart Thermostat,Electronics,Smart Home,ClimateControl,179.99,107.99,SUP019,0.3,12x12x4,White,Plastic,2023-03-20,N
+PROD020,Memory Foam Pillow,Home & Bedroom,Bedding,ComfortRest,54.99,29.99,SUP020,1.2,60x40x12,White,Memory Foam,2023-01-30,N
+PROD021,Bluetooth Car Adapter,Electronics,Automotive,AutoConnect,94.99,56.99,SUP021,0.15,8x6x2,Black,Plastic,2023-03-10,N
+PROD022,Kitchen Knife Set,Home & Kitchen,Cutlery,ChefMaster,64.99,34.99,SUP022,1.8,Set of 6,Silver,Stainless Steel,2023-02-28,N 

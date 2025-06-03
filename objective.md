@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project implements a **complete, production-ready ETL (Extract, Transform, Load) pipeline** on Google Cloud Platform using Infrastructure as Code (Terraform). The infrastructure is designed to process sales analytics data with enterprise-grade security, scalability, and reliability.
+This project is a **complete, production-ready ETL (Extract, Transform, Load) pipeline** on Google Cloud Platform using Infrastructure as Code (Terraform). The infrastructure is designed to process sales analytics data with enterprise-grade security, scalability, and reliability.
 
 ## Business Objective
 
