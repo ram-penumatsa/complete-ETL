@@ -46,6 +46,7 @@ logs/
 **/terraform.tfvars.json
 **/*.auto.tfvars
 **/*.auto.tfvars.json
+*tfplan
 
 # Service account keys
 *.json
