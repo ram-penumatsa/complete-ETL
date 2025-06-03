@@ -103,6 +103,7 @@ def create_spark_session():
         .config("spark.jars", "gs://{}/jars/postgresql-42.7.1.jar".format(DATA_BUCKET)) \
         .config("spark.sql.adaptive.enabled", "true") \
         .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
+        .config("spark.eventLog.enabled", "false") \
         .getOrCreate()
 
 def read_sales_data(spark):
@@ -198,9 +199,12 @@ def process_sales_analytics(sales_df, products_df, stores_df):
         col("quantity") * col("unit_price")
     )
     
+    # Drop unit_price from products to avoid ambiguity (we use sales unit_price)
+    products_clean = products_df.drop("unit_price") if "unit_price" in products_df.columns else products_df
+    
     # Join with reference data
     enriched_sales = sales_clean \
-        .join(products_df, "product_id", "left") \
+        .join(products_clean, "product_id", "left") \
         .join(stores_df, "store_id", "left")
     
     # Daily sales summary

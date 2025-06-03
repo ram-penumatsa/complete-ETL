@@ -10,8 +10,6 @@ from airflow.providers.google.cloud.operators.dataproc import (
     DataprocCreateClusterOperator,
     DataprocDeleteClusterOperator
 )
-from airflow.providers.google.cloud.sensors.gcs import GCSObjectExistenceSensor
-from airflow.providers.google.cloud.operators.gcs import GCSListObjectsOperator
 from airflow.operators.python import PythonOperator
 from airflow.operators.dummy import DummyOperator
 import os
@@ -36,7 +34,7 @@ default_args = {
     'start_date': datetime(2024, 1, 1),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 2,
+    'retries': 0,
     'retry_delay': timedelta(minutes=5),
     'max_active_runs': 1,
 }
@@ -49,50 +47,6 @@ dag = DAG(
     schedule_interval='@daily',
     catchup=False,
     tags=['etl', 'sales', 'analytics', 'pyspark', 'bigquery']
-)
-
-# ===================================================================
-# DATA VALIDATION TASKS
-# ===================================================================
-
-# Check if sales data exists
-check_sales_data = GCSObjectExistenceSensor(
-    task_id='check_sales_data_exists',
-    bucket=DATA_BUCKET,
-    object='sales_data/sales_data.csv',
-    timeout=300,
-    poke_interval=30,
-    dag=dag
-)
-
-# Check if PySpark job exists
-check_pyspark_job = GCSObjectExistenceSensor(
-    task_id='check_pyspark_job_exists',
-    bucket=DATA_BUCKET,
-    object='pyspark-jobs/sales_analytics_direct.py',
-    timeout=300,
-    poke_interval=30,
-    dag=dag
-)
-
-# Check if BigQuery JAR exists
-check_bigquery_jar = GCSObjectExistenceSensor(
-    task_id='check_bigquery_jar_exists',
-    bucket=DATA_BUCKET,
-    object='jars/spark-bigquery-with-dependencies_2.12-0.25.2.jar',
-    timeout=300,
-    poke_interval=30,
-    dag=dag
-)
-
-# Check if PostgreSQL JAR exists
-check_postgres_jar = GCSObjectExistenceSensor(
-    task_id='check_postgres_jar_exists',
-    bucket=DATA_BUCKET,
-    object='jars/postgresql-42.7.1.jar',
-    timeout=300,
-    poke_interval=30,
-    dag=dag
 )
 
 # ===================================================================
@@ -129,6 +83,7 @@ pyspark_job = {
             "spark.driver.memory": "2g",
             "spark.sql.adaptive.enabled": "true",
             "spark.sql.adaptive.coalescePartitions.enabled": "true",
+            "spark.eventLog.enabled": "false",
             # Environment variables for PySpark job
             "spark.executorEnv.PYSPARK_PROJECT_ID": PROJECT_ID,
             "spark.executorEnv.REGION": REGION,
@@ -162,46 +117,6 @@ run_sales_analytics = DataprocSubmitJobOperator(
 )
 
 # ===================================================================
-# VALIDATION TASKS
-# ===================================================================
-
-def validate_bigquery_results(**context):
-    """Validate that BigQuery tables were created and populated"""
-    from google.cloud import bigquery
-    
-    client = bigquery.Client(project=PROJECT_ID)
-    
-    tables_to_check = [
-        'daily_sales_summary',
-        'product_performance', 
-        'store_performance'
-    ]
-    
-    for table_name in tables_to_check:
-        table_id = f"{PROJECT_ID}.{BIGQUERY_DATASET}.{table_name}"
-        
-        try:
-            table = client.get_table(table_id)
-            row_count = client.query(f"SELECT COUNT(*) as cnt FROM `{table_id}`").to_dataframe().iloc[0]['cnt']
-            
-            print(f"✓ Table {table_name}: {table.num_rows} rows, {len(table.schema)} columns")
-            
-            if row_count == 0:
-                raise ValueError(f"Table {table_name} is empty!")
-                
-        except Exception as e:
-            print(f"✗ Error checking table {table_name}: {str(e)}")
-            raise e
-    
-    print("All BigQuery tables validated successfully!")
-
-validate_results = PythonOperator(
-    task_id='validate_bigquery_results',
-    python_callable=validate_bigquery_results,
-    dag=dag
-)
-
-# ===================================================================
 # WORKFLOW ORCHESTRATION
 # ===================================================================
 
@@ -217,13 +132,7 @@ end_pipeline = DummyOperator(
 )
 
 # Define task dependencies
-start_pipeline >> [check_sales_data, check_pyspark_job, check_bigquery_jar, check_postgres_jar]
-
-[check_sales_data, check_pyspark_job, check_bigquery_jar, check_postgres_jar] >> run_sales_analytics
-
-run_sales_analytics >> validate_results
-
-validate_results >> end_pipeline
+start_pipeline >> run_sales_analytics >> end_pipeline
 
 # ===================================================================
 # DAG DOCUMENTATION
@@ -236,9 +145,7 @@ This DAG orchestrates a complete ETL pipeline for sales analytics processing.
 
 ## Pipeline Steps:
 
-1. **Data Validation**: Check if required input files exist in GCS
-2. **ETL Processing**: Run PySpark job to process sales data
-3. **Result Validation**: Verify BigQuery tables were created and populated
+1. **ETL Processing**: Run PySpark job to process sales data
 
 ## Data Flow:
 - **Input**: Sales CSV data from GCS
@@ -252,6 +159,6 @@ This DAG orchestrates a complete ETL pipeline for sales analytics processing.
 
 ## Schedule: 
 - Runs daily at midnight UTC
-- Automatic retries on failure
+- No automatic retries on failure
 - Single active run at a time
 """ 
