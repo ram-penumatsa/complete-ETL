@@ -2,7 +2,7 @@
 # SECURITY MODULE - SECRET MANAGER
 # ===================================================================
 
-# Create secret for PostgreSQL password
+# Option 1: Create secret with password from variable (current approach)
 resource "google_secret_manager_secret" "sql_password" {
   secret_id = "${var.environment}-sql-password"
 
@@ -23,6 +23,12 @@ resource "google_secret_manager_secret_version" "sql_password_version" {
   secret      = google_secret_manager_secret.sql_password.id
   secret_data = var.sql_user_password
 }
+
+# Option 2: Reference existing secret (uncomment to use)
+# data "google_secret_manager_secret_version" "existing_sql_password" {
+#   secret  = "projects/${var.project_id}/secrets/sql-password"
+#   version = "latest"
+# }
 
 # IAM binding for Dataproc service account to access secret
 resource "google_secret_manager_secret_iam_member" "dataproc_secret_access" {

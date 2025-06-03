@@ -59,7 +59,8 @@ data_bucket_name = "pram-final-etl-data-lake"
 sql_instance_name     = "etl-postgres"
 sql_database_name     = "retail_sql"
 sql_user_name         = "retail_user"
-sql_user_password     = "YourSecurePassword123!"  # Use environment variable in production: TF_VAR_sql_user_password
+# sql_user_password     = "YourSecurePassword123!"  # ❌ REMOVED: Use environment variable instead
+# Set password via: export TF_VAR_sql_user_password="YourSecurePassword"
 
 # Cloud SQL instance sizing (cost-optimized for demo)
 sql_tier              = "db-f1-micro"
@@ -105,10 +106,10 @@ bigquery_dataset_id = "pram_final_sales_analytics"
 composer_name = "pram-final-etl-composer"
 
 # Composer image version
-composer_image_version = "composer-2.5.4-airflow-2.7.3"
+composer_image_version = "composer-3-airflow-2.10.5"
 
 # Composer sizing (cost-optimized for demo)
-composer_environment_size = "SMALL"
+composer_environment_size = "ENVIRONMENT_SIZE_SMALL"
 
 # Composer workload resource allocation (small for demo)
 composer_scheduler_cpu     = 0.5
