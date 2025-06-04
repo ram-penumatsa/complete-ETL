@@ -34,8 +34,7 @@ default_args = {
     'start_date': datetime(2024, 1, 1),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 0,
-    'retry_delay': timedelta(minutes=5),
+    'retries': 0,  # NO RETRIES: Fail immediately on error
     'max_active_runs': 1,
 }
 
@@ -44,9 +43,9 @@ dag = DAG(
     'sales_analytics_etl',
     default_args=default_args,
     description='Sales Analytics ETL Pipeline with PySpark and BigQuery',
-    schedule_interval='@daily',
+    schedule_interval=None,
     catchup=False,
-    tags=['etl', 'sales', 'analytics', 'pyspark', 'bigquery']
+    tags=['etl', 'sales', 'analytics', 'pyspark', 'bigquery', 'manual']
 )
 
 # ===================================================================
@@ -113,6 +112,7 @@ run_sales_analytics = DataprocSubmitJobOperator(
     job=pyspark_job,
     region=REGION,
     project_id=PROJECT_ID,
+    retries=0,  # Explicit: NO RETRIES for this task
     dag=dag
 )
 
@@ -139,7 +139,7 @@ start_pipeline >> run_sales_analytics >> end_pipeline
 # ===================================================================
 
 dag.doc_md = """
-# Sales Analytics ETL Pipeline
+# Sales Analytics ETL Pipeline (Manual Execution)
 
 This DAG orchestrates a complete ETL pipeline for sales analytics processing.
 
@@ -152,13 +152,20 @@ This DAG orchestrates a complete ETL pipeline for sales analytics processing.
 - **Processing**: PySpark on Dataproc cluster
 - **Output**: Analytics tables in BigQuery
 
+## Execution:
+- **Manual Only**: No automatic scheduling
+- **Trigger**: Run manually from Airflow UI or CLI
+- **No automatic retries** on failure
+- **Single active run** at a time
+
+## How to Run Manually:
+1. Access Airflow UI
+2. Find 'sales_analytics_etl' DAG
+3. Click "Trigger DAG" button
+4. Monitor execution in the UI
+
 ## Monitoring:
 - Check Airflow logs for task execution details
 - Monitor Dataproc job progress in GCP Console
 - Verify results in BigQuery Console
-
-## Schedule: 
-- Runs daily at midnight UTC
-- No automatic retries on failure
-- Single active run at a time
 """ 
