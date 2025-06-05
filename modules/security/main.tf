@@ -2,7 +2,7 @@
 # SECURITY MODULE - SECRET MANAGER
 # ===================================================================
 
-# Option 1: Create secret with password from variable (current approach)
+# Option 1: Create secret without initial password (manual setup required)
 resource "google_secret_manager_secret" "sql_password" {
   secret_id = "${var.environment}-sql-password"
 
@@ -18,17 +18,20 @@ resource "google_secret_manager_secret" "sql_password" {
   }
 }
 
-# Create secret version with the password
+# Option 2: Create secret version only if password is provided
 resource "google_secret_manager_secret_version" "sql_password_version" {
+  count       = var.sql_user_password != "" ? 1 : 0
   secret      = google_secret_manager_secret.sql_password.id
   secret_data = var.sql_user_password
 }
 
-# Option 2: Reference existing secret (uncomment to use)
-# data "google_secret_manager_secret_version" "existing_sql_password" {
-#   secret  = "projects/${var.project_id}/secrets/sql-password"
-#   version = "latest"
-# }
+# Option 3: Reference existing secret version (no variable dependency)
+data "google_secret_manager_secret_version" "sql_password_latest" {
+  secret  = google_secret_manager_secret.sql_password.id
+  version = "latest"
+  
+  depends_on = [google_secret_manager_secret_version.sql_password_version]
+}
 
 # IAM binding for Dataproc service account to access secret
 resource "google_secret_manager_secret_iam_member" "dataproc_secret_access" {

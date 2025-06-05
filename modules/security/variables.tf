@@ -7,6 +7,7 @@ variable "sql_user_password" {
   description = "PostgreSQL user password"
   type        = string
   sensitive   = true
+  default     = ""  # Empty default - allows destroy without prompts
 }
 
 variable "dataproc_service_account_email" {
